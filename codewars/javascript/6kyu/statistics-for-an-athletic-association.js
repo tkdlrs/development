@@ -138,3 +138,85 @@ var medianString = medianHours.toString().padStart(2, '0') + '|' + medianMinutes
   }
 
 }
+
+// Second attempt
+function stat(strg) {
+
+if(strg === ''){return ''}
+
+// change array of strings into an ordered array of times in Seconds
+var times = strg.split(',');
+var timesSeconds = [];
+
+for(var i = 0; i < times.length; i++){
+
+  let current = times[i];
+  let currentTime = current.split('|');
+  let seconds = (Number(currentTime[0]) * 3600) + (Number(currentTime[1]) * 60) + Number(currentTime[2]) ;
+
+  timesSeconds.push(seconds);
+}
+
+timesSeconds.sort(function (a, b) {
+  return a - b;
+});
+
+
+// Range:
+function Range(high, low) {
+  let ran = high - low;
+  return Number(ran);
+}
+
+// Average:
+const reducer = (adder, currentValue) => adder + currentValue ;
+let total = timesSeconds.reduce(reducer);
+function Average(sum, length) {
+  let avr = sum / length;
+  return Number(avr);
+}
+
+// Median:
+var middleValue = Number.parseInt(timesSeconds.length / 2);
+function Median(values) {
+
+  if(values.length % 2) {
+      return Number(values[middleValue]);
+    } else {
+      return Number((values[middleValue - 1] + values[middleValue]) / 2);
+    }
+}
+
+// Convert back to time strings with the format 'hh|mm|ss'
+function converter(timeInSeconds) {
+  let hours, minutes, seconds, string;
+    // hours
+    if(timeInSeconds >= 3600) {
+      hours = Math.floor(timeInSeconds / 3600);
+      timeInSeconds = timeInSeconds - (hours * 3600);
+    } else {
+      hours = 0;
+      timeInSeconds = timeInSeconds;
+    }
+
+    // minutes
+    if(timeInSeconds >= 60){
+      minutes = Math.floor(timeInSeconds / 60);
+      timeInSeconds = timeInSeconds - (minutes * 60);
+    } else {
+      minutes = 0;
+      timeInSeconds = timeInSeconds;
+    }
+
+    // seconds
+    seconds = Math.floor(timeInSeconds);
+
+ string = hours.toString().padStart(2,'0') + '|' + minutes.toString().padStart(2, '0') + '|' + seconds.toString().padStart(2, '0');
+ return string;
+
+}
+
+console.log('Range: ' + converter(Range(timesSeconds[timesSeconds.length - 1], timesSeconds[0] )) + ' Average: ' + converter(Average(total, timesSeconds.length)) + ' Median: ' + converter(Median(timesSeconds)) );
+return 'Range: ' + converter(Range(timesSeconds[timesSeconds.length - 1], timesSeconds[0] )) + ' Average: ' + converter(Average(total, timesSeconds.length)) + ' Median: ' + converter(Median(timesSeconds));
+
+}
